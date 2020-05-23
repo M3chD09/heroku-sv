@@ -1,6 +1,5 @@
 {
     "server":"0.0.0.0",
-    "password":"password",
     "timeout":300,
     "method":"aes-256-gcm",
     "plugin": "v2ray-plugin",

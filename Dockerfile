@@ -38,4 +38,4 @@ RUN apk add --virtual .build-deps \
 
 COPY ./config.json /etc/shadowsocks-libev/config.json
 
-CMD ss-server -c /etc/shadowsocks-libev/config.json -p $PORT 
+CMD ss-server -c /etc/shadowsocks-libev/config.json -p $PORT -k $SS_PASSWORD
