@@ -18,8 +18,5 @@ RUN apk add --no-cache \
     && tar xf $v2_file \
     && mv v2ray-plugin_linux_amd64 /usr/bin/v2ray-plugin \
     && rm -f $ss_file $v2_file \
-    && mkdir /etc/shadowsocks-rust/
 
-COPY ./config.json /etc/shadowsocks-rust/config.json
-
-CMD /usr/bin/ssserver -c /etc/shadowsocks-rust/config.json -p $PORT -k $SS_PASSWORD
+CMD /usr/bin/ssserver -s "[::]:"$PORT -m "aes-256-gcm" -k $SS_PASSWORD --plugin "v2ray-plugin" --plugin-opts "server"
