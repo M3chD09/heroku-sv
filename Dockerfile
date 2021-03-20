@@ -22,4 +22,4 @@ RUN apk add --no-cache \
 
 COPY ./config.json /etc/shadowsocks-rust/config.json
 
-CMD ssserver -c /etc/shadowsocks-rust/config.json -p $PORT -k $SS_PASSWORD
+CMD /usr/bin/ssserver -c /etc/shadowsocks-rust/config.json -p $PORT -k $SS_PASSWORD
