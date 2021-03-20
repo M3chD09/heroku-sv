@@ -2,40 +2,23 @@ FROM alpine:latest
 
 LABEL maintainer="m3chd09 <m3chd09@protonmail.com>"
 
-RUN apk add --virtual .build-deps \
+RUN apk add --no-cache \
     tar \
     wget \
-    build-base \
-    pcre-dev \
-    libsodium-dev \
-    mbedtls-dev \
-    asciidoc xmlto \
-    libev-dev \
-    c-ares-dev \
-    linux-headers \
-    && ss_file="$(wget -qO- https://api.github.com/repos/shadowsocks/shadowsocks-libev/releases/latest | grep name | grep tar | cut -f4 -d\")" \
-    && v2_file="$(wget -qO- https://api.github.com/repos/shadowsocks/v2ray-plugin/releases/latest | grep linux-amd64 | grep name | cut -f4 -d\")" \
-    && ss_url="$(wget -qO- https://api.github.com/repos/shadowsocks/shadowsocks-libev/releases/latest | grep browser_download_url | cut -f4 -d\")" \
-    && v2_url="$(wget -qO- https://api.github.com/repos/shadowsocks/v2ray-plugin/releases/latest | grep linux-amd64 | grep browser_download_url | cut -f4 -d\")" \
+    && ss_version="$(wget --no-check-certificate -qO- https://api.github.com/repos/shadowsocks/shadowsocks-rust/releases/latest | grep 'tag_name' | cut -d\" -f4)" \
+    && v2_version="$(wget --no-check-certificate -qO- https://api.github.com/repos/shadowsocks/v2ray-plugin/releases/latest | grep 'tag_name' | cut -d\" -f4)" \
+    && ss_file="shadowsocks-${ss_version}.x86_64-unknown-linux-gnu.tar.xz" \
+    && v2_file="v2ray-plugin-linux-amd64-${v2_version}.tar.gz" \
+    && ss_url="https://github.com/shadowsocks/shadowsocks-rust/releases/download/${ss_version}/${ss_file}" \
+    && v2_url="https://github.com/shadowsocks/v2ray-plugin/releases/download/${v2_version}/${v2_file}" \
     && wget $ss_url \
-    && tar xf $ss_file \
+    && tar -C /usr/bin/ -xzf $ss_file \
     && wget $v2_url \
     && tar xf $v2_file \
     && mv v2ray-plugin_linux_amd64 /usr/bin/v2ray-plugin \
-    && cd "$(echo ${ss_file} | cut -f1-3 -d\.)" \
-    && ./configure --prefix=/usr --disable-documentation \
-    && make \
-    && make install \
-    && cd .. \
-    && apk add --no-cache rng-tools \
-        $(scanelf --needed --nobanner /usr/bin/ss-* \
-        | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
-        | xargs -r apk info --installed \
-        | sort -u) \
-    && apk del .build-deps \
-    && rm -rf $ss_file $v2_file "$(echo ${ss_file} | cut -f1-3 -d\.)" \
-    && mkdir /etc/shadowsocks-libev/
+    && rm -f $ss_file $v2_file \
+    && mkdir /etc/shadowsocks-rust/
 
-COPY ./config.json /etc/shadowsocks-libev/config.json
+COPY ./config.json /etc/shadowsocks-rust/config.json
 
-CMD ss-server -c /etc/shadowsocks-libev/config.json -p $PORT -k $SS_PASSWORD
+CMD ssserver -c /etc/shadowsocks-rust/config.json -p $PORT -k $SS_PASSWORD
