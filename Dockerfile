@@ -17,6 +17,6 @@ RUN apk add --no-cache \
     && wget $v2_url \
     && tar xf $v2_file \
     && mv v2ray-plugin_linux_amd64 /usr/bin/v2ray-plugin \
-    && rm -f $ss_file $v2_file \
+    && rm -f $ss_file $v2_file
 
 CMD /usr/bin/ssserver -s "[::]:"$PORT -m "aes-256-gcm" -k $SS_PASSWORD --plugin "v2ray-plugin" --plugin-opts "server"
