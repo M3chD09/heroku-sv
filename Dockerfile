@@ -2,7 +2,7 @@ FROM alpine:latest
 
 LABEL maintainer="m3chd09 <m3chd09@protonmail.com>"
 
-ARG SSVER=v1.10.9
+ARG SSVER=v1.11.2
 ARG V2VER=v1.3.1
 
 RUN apk add --no-cache tar wget xz \
