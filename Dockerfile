@@ -2,8 +2,8 @@ FROM alpine:latest
 
 LABEL maintainer="m3chd09 <m3chd09@protonmail.com>"
 
-ARG SSVER=v1.12.3
-ARG V2VER=v1.4.0
+ARG SSVER=v1.12.4
+ARG V2VER=v1.4.1
 
 RUN apk add --no-cache tar wget xz \
     && ss_file="shadowsocks-${SSVER}.x86_64-unknown-linux-musl.tar.xz" \
